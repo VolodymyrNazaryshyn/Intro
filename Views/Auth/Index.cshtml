@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Auth Page";
+    var user = ViewData["AuthUser"] as Intro.DAL.Entities.User;
+}
+
+@if (user == null)
+{
+    <form action="/Auth/Login" method="post" enctype="application/x-www-form-urlencoded">
+        <table>
+            <tr>
+                <td>Login:</td>
+                <td><input type="text" name="UserLogin" /></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" name="UserPassword" /></td>
+            </tr>
+            <tr>
+                <td><button>Log in</button></td>
+                <td>@ViewData["LoginError"]</td>
+            </tr>
+        </table>
+    </form>
+
+    <button onclick="location='/Auth/Register'">Register</button>
+}
+else
+{
+    <p>
+        Hello, <b>@user.RealName</b>
+        @if (user.Avatar == null)
+        {
+            <img src='/img/default_avatar.png' style='max-height:1em;border-radius:50%'/>
+        }
+        else
+        {
+            <img src='/img/@user.Avatar' style='max-height:1em;border-radius:50%'/>
+        }
+    </p>
+}
+
+@ViewData["fromAuthMiddleware"]
+<br />
+@ViewData["Locale"]

@@ -1,0 +1,67 @@
+﻿@{
+    var errors = ViewData["regErrors"] as String[];
+    var saveData = ViewData["saveData"] as String[];
+    var validData = ViewData["validData"] as String[];
+}
+
+<h1>New user registration</h1>
+
+<form action="/Auth/RegUser" method="post" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>Name Surname:</td>
+            <td><input type="text" name="RealName" value="@saveData?[0]" /></td>
+            <td>
+                @if (!String.IsNullOrEmpty(errors?[1]))
+                    @errors[1]
+                else if (validData?[2] == false.ToString())
+                    @errors[9]
+            </td>
+        </tr>
+        <tr>
+            <td>Login:</td>
+            <td><input type="text" name="Login" value="@saveData?[1]" /></td>
+            <td>
+                @if (!String.IsNullOrEmpty(errors?[2]))
+                    @errors[2]
+                else if (saveData?[1].Length < 5)
+                    @errors[6]
+                else if (validData?[0] == false.ToString())
+                    @errors[7]
+            </td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type="password" name="Password1" /></td>
+            <td>
+                @if (!String.IsNullOrEmpty(errors?[3]))
+                    @errors[3]
+            </td>
+        </tr>
+        <tr>
+            <td>Confirm password:</td>
+            <td><input type="password" name="Password2" /></td>
+            <td>
+                @if (saveData?[3] != saveData?[4])
+                    @errors[4]
+            </td>
+        </tr>
+        <tr>
+            <td>E-mail:</td>
+            <td><input type="email" name="Email" value="@saveData?[2]" /></td>
+            <td>
+                @if (!String.IsNullOrEmpty(errors?[5]))
+                    @errors[5]
+                else if (validData?[1] == false.ToString())
+                    @errors[8]
+            </td>
+        </tr>
+        <tr>
+            <td>Avatar:</td>
+            <td colspan="2"><input type="file" name="Avatar" /></td>
+        </tr>
+        <tr>
+            <td colspan="3"><button type="submit">Register</button></td>
+        </tr>
+    </table>
+</form>

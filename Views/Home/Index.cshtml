@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <b>Random integer:</b> <span id="rndNumber">@ViewData["rnd"]</span> <br />
+    <b>Hash:</b> @ViewBag.hash <br /><br />
+
+    <b>Current date:</b> @ViewData["date"] <br />
+    <b>Current time:</b> @ViewData["time"] <br /><br />
+
+    <b>Users Count:</b> @ViewData["UsersCount"] <br /><br />
+
+    @{
+        var users = ViewData["UsersRealName"] as List<string>;
+        int numberOfUser = 1;
+    }
+
+    <b>Users RealName:</b> <br />
+    @foreach (var user in users)
+    {
+        @(numberOfUser++ + ". " + user) <br />
+    }
+
+    <br />
+    <b>FromAuthMiddleware: </b> @ViewData["fromAuthMiddleware"]
+    <br />
+    <b>AuthUserName: </b> @ViewData["authUserName"]
+</div>
+
+<script>
+    setInterval(
+        () => {
+            fetch("/Home/Random")
+            .then(r => r.text())
+            .then(t => rndNumber.innerText = t)
+        }, 1000
+    )
+</script>

@@ -1,0 +1,83 @@
+﻿<link rel="stylesheet" href="/css/profile.css" />
+
+@{
+    var user = ViewData["AuthUser"] as Intro.DAL.Entities.User;
+}
+
+<h1>User Profile</h1>
+
+@if (user.LogMoment != null)
+{
+    <span>Was online for the last time: <b>@user.LogMoment</b></span>
+}
+
+@if (user == null)
+{
+    <a href="/Auth">You must log in</a>
+}
+else
+{
+    <table>
+        <tr>
+            <td>
+                <label for="avatar">
+                    @if (user.Avatar == null)
+                    {
+                        <img id="userLogo" src='/img/default_avatar.png' style="max-height:10em; margin-right:20px" />
+                    }
+                    else
+                    {
+                        <img id="userLogo" src='/img/@user.Avatar' style="max-height:10em; margin-right:20px" />
+                    }
+                </label>
+
+            </td>
+            <td style="vertical-align: top">
+                <table>
+                    <tr>
+                        <td>
+                            <b>Real name:</b>
+                        </td>
+                        <td>
+                            <span id="userRealName" class="userInput">@user.RealName</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Login:</b>
+                        </td>
+                        <td>
+                            <span id="userLogin" class="userInput">@user.Login</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Email:</b>
+                        </td>
+                        <td>
+                            <span id="userEmail" class="userInput">@user.Email</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Password:</b>
+                        </td>
+                        <td>
+                            <span id="userPassword" class="userInput" style="width:110px; display:inline-block;">New password</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <input type="file" id="avatar" style="visibility:hidden" accept="image/*" />
+}
+
+<script src="/js/profile.js"></script>
+
+@*Передача файлов асинхронным способом
+1. Устанавливается файловый input, но его стараются скрыть. Для обеспечения активности
+для него ставят label
+2. Для файлового элемента устанавливают обработчик события change (или отдельная
+кнопка для изменения)*@

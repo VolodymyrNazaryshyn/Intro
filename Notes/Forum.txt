@@ -1,0 +1,21 @@
+﻿Форум
+Процесс создания
+
+DAL-Entities
+class Topic
+class Article
+
+DAL-Context-IntroContext
++ DbSet
+
+Update Database
+Tool - NuGet - PM Console
+PM> Add-Migration Forum
+PM> Update-Database
+(проверяем через обозреватель - должны появиться таблицы в БД)
+
+Админка - механизм управления новыми сущностями
+Реализуем в стиле API
+API - new ApiController(s)
+TopicController
+ArticleController
