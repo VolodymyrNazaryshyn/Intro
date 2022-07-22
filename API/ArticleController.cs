@@ -9,3 +9,10 @@ namespace Intro.API
     {
     }
 }
+/*
+ Д.З. Разработать методы ArticleController:
+ Get(String TopicId) => коллекция статей данного раздела (топика)
+ Post(Models.ArticleModel)
+  TopicId  -- можно заложить в модель (ArticleModel)
+  AuthorId -- в HTTP заголовке
+ */

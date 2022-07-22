@@ -181,7 +181,7 @@ namespace Intro.API
                 {
                     return "Email couldn`t contain space(s)";
                 }
-                else if (_context.Users.Where(u => u.Login == userData.Email).Count() > 0)
+                else if (_context.Users.Where(u => u.Email == userData.Email).Count() > 0)
                 {
                     return "Email in use";
                 }
@@ -210,7 +210,7 @@ namespace Intro.API
             }
             #endregion
 
-            // update
+            // updates
             if (userData.RealName != null) user.RealName = userData.RealName; // подставляем в найденного пользователя
             if (userData.Login != null) user.Login = userData.Login;
             if (userData.Password1 != null && userData.Password1 == userData.Password2)
