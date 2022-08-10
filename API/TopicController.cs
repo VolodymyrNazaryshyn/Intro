@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Intro.API
 {
-    [Route("api/[controller]")]
+    [Route("api/topic")]
     [ApiController]
     public class TopicController : ControllerBase
     {
