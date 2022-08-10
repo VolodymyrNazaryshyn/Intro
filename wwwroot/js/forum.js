@@ -29,9 +29,15 @@ function loadTopics(elem) {
 }
 
 function showTopics(elem, j) {
-    // elem.innerHTML = "topics will be here";
+    // формируем шапку таблицы
+    let headerTable = "<tr><th>Title</th><th>Description</th></tr>";
+    // инициализируем непосредственно таблицу
+    let table = "";
+
     for (let topic of j) {
-        elem.innerHTML += `<div class='topic' data-id='${topic.id}'>
-        <b>${topic.title}</b><i>${topic.description}</i></div>`;
+        // заполняем таблицу топиками
+        table += `<tr data-id='${topic.id}'><td>${topic.title}</td><td>${topic.description}</td></tr>`;
     }
+    // складываем елементы таблицы воедино
+    elem.innerHTML = `<table id='topics'>${headerTable}${table}</table>`;
 }
