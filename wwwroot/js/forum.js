@@ -55,22 +55,27 @@ function showTopics(elem, j) {
         .then(r => r.text())
         .then(trTemplate => {
             var appHtml = "";
-            for (let topic of j) {
-                appHtml +=
-                    trTemplate
-                        .replace("{{title}}", topic.title)
-                        .replace("{{description}}", topic.description)
-                        .replace("{{id}}", topic.id);
+            for (let topic of j) { // topic - один объект из JSON
+                let tpl = trTemplate;
+                for (let prop in topic) { // цикл по свойствам (ключам) объекта (id, title, description)
+                    tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
+                }
+                appHtml += tpl;
+                //appHtml += trTemplate // просто replace меняет только первое вхождение
+                //        .replaceAll("{{title}}", topic.title).replaceAll("{{description}}", topic.description).replaceAll("{{id}}", topic.id);
             }
-
             elem.innerHTML = appHtml;
-
-            let topicCollection = document.getElementsByClassName("topic"); // получаем все элементы по имени класса
-            for (let i = 0; i < topicCollection.length; i++) {
-                topicCollection[i].addEventListener('click', // для каждого топика устанавливаем обработчик клика
-                    () => { alert(`${j[i].title} id: ${j[i].id}`); }); // по клику на топик в alert выводим его id
-            }
+            topicLoaded();
         });
+}
 
-    
+async function topicLoaded() {
+    for (let topic of document.querySelectorAll(".topic")) {
+        topic.onclick = topicClick;
+    }
+}
+
+function topicClick(e) {
+    window.location = "/Forum/Topic/" +
+        e.target.closest(".topic").getAttribute("data-id");
 }
