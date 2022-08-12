@@ -72,7 +72,14 @@ body {
 
 /* ------------------- */
 
-#topics {
+.topic {
+    border: 2px solid lightgray;
+    box-shadow: 0 0 4px 5px lightgray;
+    margin: 5vh 5vw;
+    padding: 4vh 4vw;
+}
+
+/*#topics {
     border-collapse: collapse;
     width: 100%;
 }
@@ -82,14 +89,14 @@ body {
     padding: 8px;
 }
 
-#topics tr:nth-child(even) {
+#topics tr:nth-child(even) {*/
     /* меняем цвет в нечетных топиках */
-    background-color: #efe2e2;
+    /*background-color: #efe2e2;
 }
 
-#topics tr:hover {
+#topics tr:hover {*/
     /* меняем цвет при наведении на топик */
-    background-color: #d0d8db;
+    /*background-color: #d0d8db;
 }
 
 #topics th {
@@ -98,4 +105,4 @@ body {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-}
+}*/
