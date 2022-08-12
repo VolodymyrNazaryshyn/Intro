@@ -64,6 +64,12 @@ function showTopics(elem, j) {
             }
 
             elem.innerHTML = appHtml;
+
+            let topicCollection = document.getElementsByClassName("topic"); // получаем все элементы по имени класса
+            for (let i = 0; i < topicCollection.length; i++) {
+                topicCollection[i].addEventListener('click', // для каждого топика устанавливаем обработчик клика
+                    () => { alert(`${j[i].title} id: ${j[i].id}`); }); // по клику на топик в alert выводим его id
+            }
         });
 
     
