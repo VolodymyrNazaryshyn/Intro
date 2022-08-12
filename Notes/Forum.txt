@@ -19,3 +19,19 @@ PM> Update-Database
 API - new ApiController(s)
 TopicController
 ArticleController
+
+----------------- AJAX - SPA -------------------
+SPA - Single Page App - приложение, работающее на одной странице
+ (без перехода на другие страницы)
+AJAX - Async JS And Xml - технология обмена данными клиент-сервер
+    
+/Forum/Index.html
+ <app>   <-----------|
+ forum.js            |      как запустить много fetch одновременно
+   ->API (data)      |
+    ->Template (html)|
+       --> data->template
+
+window.data = window.tpl = null;
+->API --> window.data = j, await window.tpl
+->Tpl --> window.tpl = t
