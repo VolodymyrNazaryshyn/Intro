@@ -6,7 +6,14 @@
 
 function buttonPublishClick(e) {
     const articleText = document.getElementById("article-text");
+
     if (!articleText) throw "article-text element not found";
+
     const txt = articleText.value;
-    console.log(txt);
+
+    // Собираем и выводим данные из атрибутов data в консоль
+    console.log(`Author ID: ${articleText.dataset.authorId}`);
+    console.log(`Topic ID: ${articleText.dataset.topicId}`);
+    console.log(`Text: ${txt}`);
+    console.log(`Creation date: ${articleText.dataset.datetime}`);
 }
