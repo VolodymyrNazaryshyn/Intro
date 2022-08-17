@@ -1,119 +1,100 @@
-﻿using Intro.DAL.Context;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 
 namespace Intro.API
 {
-    [Route("api/[controller]")]
+    [Route("api/article")]
     [ApiController]
     public class ArticleController : ControllerBase
     {
-        private readonly IntroContext _context;
+        private readonly DAL.Context.IntroContext _context;
+        private readonly Services.IHasher _hasher;
 
-        public ArticleController(IntroContext context)
+        public ArticleController(
+            DAL.Context.IntroContext context,
+            Services.IHasher hasher)
         {
             _context = context;
+            _hasher = hasher;
         }
 
-        // CREATE - POST
+        [HttpGet("{id}")]
+        public IEnumerable Get(string id) //коллекция статей данного раздела(топика)
+        {
+            Guid topicId = Guid.Parse(id);
+            return _context.Articles
+                .Where(a => a.TopicId == topicId)
+                .OrderBy(a => a.CreatedDate);
+        }
+
         [HttpPost]
         public object Post([FromForm]Models.ArticleModel article)
         {
-            // проверено - при отсутствии заголовка возвращает "" (не Exception)
-            string AuthorIdHeader = HttpContext.Request.Headers["Author-Id"].ToString();
-            Guid AuthorId;
-            Guid TopicId;
-            // Validation
-            try
-            { AuthorId = Guid.Parse(AuthorIdHeader); }
-            catch
-            {
-                return new
-                {
-                    status = "Error",
-                    message = "Author-Id Header empty or invalid (GUID expected)"
-                };
-            }
-
-            // проверяем данные
             if(article == null)
             {
                 return new { status = "Error", message = "No data" };
             }
-
-            try
+            if(String.IsNullOrEmpty(article.Text))
             {
-                TopicId = Guid.Parse(article.TopicId);
-            }
-            catch
-            {
-                return new { status = "Error", message = "Topic-Id invalid (GUID expected)" };
+                return new { status = "Error", message = "Empty Text" };
             }
 
-            if(String.IsNullOrEmpty(article.Text) || String.IsNullOrEmpty(article.PictureFile.FileName))
+            // Есть ли пользователь с переданным ID?
+            if(_context.Users.Find(article.AuthorId) == null)
             {
-                return new { status = "Error", message = "Empty Text or Picture File" };
+                return new { status = "Error", message = "Invalid Author" };
+            }
+            // Есть ли раздел (топик) с переданным ID?
+            if(_context.Topics.Find(article.TopicId) == null)
+            {
+                return new { status = "Error", message = "Invalid Topic" };
             }
 
-            // поиск пользователя в БД
-            var author = _context.Users.Find(AuthorId);
-            if(author == null)
+            string newFileName = null;
+
+            if(article.Picture != null) // Есть ли переданный файл?
             {
-                return new
+                int pos = article.Picture.FileName.LastIndexOf('.');
+                if(pos == -1)  // У файла нет расширения
                 {
-                    status = "Error",
-                    message = "Forbidden"
-                };
-            }
+                    return new { status = "Error", message = "No extension" };
+                }
+                string ext = article.Picture.FileName.Substring(pos);
+                if(Array.IndexOf(new String[] { ".png", ".jpg", ".bmp", ".gif" }, ext) == -1)
+                {
+                    return new { status = "Error", message = "Invalid file format" };
+                }
 
-            string newFileName = article.PictureFile?.FileName;
-
-            // есть переданный файл
-            if(article.PictureFile != null)
-            {
-                // убеждаемся, что в имени файла нету ../ (защита от DT)
-                if(newFileName.Contains("../"))
-                    newFileName = newFileName.Replace("../", "");
+                newFileName = _hasher.Hash(Guid.NewGuid().ToString()) + ext;
 
                 var pictures = new DirectoryInfo("./wwwroot/img/articleImg").GetFiles();
-
                 foreach(var picture in pictures)
                 {
                     if(newFileName == picture.Name)
                     {
-                        string fileWithoutExt = Path.GetFileNameWithoutExtension(newFileName); // файл без расширения
-                        string extension = Path.GetExtension(new FileInfo(newFileName).FullName); // расширение файла
-                        newFileName = fileWithoutExt + Guid.NewGuid().ToString() + extension; // формируем новое имя файла
+                        newFileName = _hasher.Hash(newFileName) + ext;
                     }
                 }
-                // сохраняем файл в папку wwwroot/img
-                article.PictureFile.CopyToAsync(new FileStream("./wwwroot/img/articleImg/" + newFileName, FileMode.Create));
+
+                var file = new FileStream("./wwwroot/img/articleImg/" + newFileName, FileMode.Create);
+                article.Picture.CopyToAsync(file).ContinueWith(t => file.Dispose());
             }
 
-            // Создаем статью и сохраняем в БД
             _context.Articles.Add(new()
             {
-                TopicId = TopicId,
-                Text = article.Text,
-                AuthorId = author.Id,
-                ReplyId = article?.ReplyId,
+                AuthorId = article.AuthorId,
+                TopicId = article.TopicId,
                 CreatedDate = DateTime.Now,
-                PictureFile = article.PictureFile.FileName
+                PictureFile = newFileName,
+                Text = article.Text,
+                ReplyId = article.ReplyId
             });
             _context.SaveChanges();
-
-            return new { status = "Ok", message = $"Article created. Text: {article.Text}" };
-        }
-
-        //коллекция статей данного раздела(топика)
-        [HttpGet]
-        public IEnumerable<DAL.Entities.Article> Get(String TopicId)
-        {
-            return _context.Articles.Where(a => a.TopicId.ToString() == TopicId);
+            return new { status = "Ok" };
         }
     }
 }

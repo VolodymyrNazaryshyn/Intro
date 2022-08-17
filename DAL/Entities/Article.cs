@@ -14,5 +14,7 @@ namespace Intro.DAL.Entities
         public Guid? ReplyId { get; set; }
         public DateTime CreatedDate { get; set; }
         public string PictureFile { get; set; }
+
+        // public Topic Topic { get; set; }
     }
 }

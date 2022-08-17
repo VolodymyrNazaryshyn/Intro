@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Intro.DAL.Entities
+@{
     ViewData["Title"] = "Topic Page";
 }
 
@@ -6,18 +7,23 @@
     TopicId: @ViewData["id"]
 </p>
 
+<articles topic-id='@ViewData["id"]'></articles>
+
 @if(ViewData["AuthUser"] == null)
 {
     <i>Необходимо войти в систему </i>
 }
 else
 {
-    var user = ViewData["AuthUser"] as Intro.DAL.Entities.User;
-
     <b>Добавить комментарий</b>
     <br />
-    @*закладываем данные в атрибуты data*@
-    <textarea id="article-text" data-author-id="@user.Id" data-topic-id="@ViewData["id"]" data-datetime="@DateTime.Now"></textarea>
+    <textarea id="article-text"
+        data-author-id="@((ViewData["AuthUser"] as User).Id)" 
+        data-topic-id="@ViewData["id"]" 
+        data-datetime="@DateTime.Now"></textarea>
+    <br />
+    <span>Добавить картинку: </span>
+    <input type="file" name="picture" />
     <br />
     <button id="button-publish">Опубликовать</button>
 
