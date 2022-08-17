@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.IO;
@@ -27,6 +28,8 @@ namespace Intro.API
         {
             Guid topicId = Guid.Parse(id);
             return _context.Articles
+                .Include(a => a.Author)
+                .Include(a => a.Topic)
                 .Where(a => a.TopicId == topicId)
                 .OrderBy(a => a.CreatedDate);
         }
