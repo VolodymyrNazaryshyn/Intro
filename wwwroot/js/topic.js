@@ -45,21 +45,24 @@ function loadArticles() {
         .then(j => {
             console.log(j);
             var html = "";
-            const tpl = `<div style='border:1px solid salmon'>
-                             <img src='/img/{{avatar}}' style='max-height:7ch' />
-                             <b>{{author}}</b>: @{{date}}
+            const tpl = `<div style='border: 2px solid lightgray; box-shadow: 0 0 4px 5px lightgray; margin-bottom: 1em;
+                         padding: 10px; border-radius: 5%; overflow: auto; background-color:antiquewhite'>
+                             <div style='display: block; float: left'>
+                                 <img src='/img/userImg/{{avatar}}' style='height:8ch; width:8ch; 
+                                 border:1px solid grey; border-radius: 50%; background: white' />
+                             </div>
+                             <div style='float: none; overflow: auto; padding-left: 10px'>
+                                 <b>{{author}}</b><br/> {{date}}
+                                 <hr style='border-color:grey'>
+                             </div>
                              <p>{{text}}</p>
                          </div>`;
             for (let article of j) {
                 const moment = new Date(article.createdDate);
                 html += tpl.replaceAll("{{author}}", article.author.realName)
                     .replaceAll("{{text}}", article.text)
-                    .replaceAll("{{avatar}}",
-                        (article.author.avatar == null
-                            ? "no-avatar.png"
-                            : article.author.avatar))
-                    .replaceAll("{{date}}",
-                        moment.toLocaleString("ru-RU"));
+                    .replaceAll("{{avatar}}", (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
+                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"));
             }
             articles.innerHTML = html;
         });

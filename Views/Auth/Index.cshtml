@@ -30,11 +30,11 @@ else
         Hello, <b>@user.RealName</b>
         @if (user.Avatar == null)
         {
-            <img src='/img/default_avatar.png' style='max-height:1em;border-radius:50%'/>
+            <img src='/img/userImg/no-avatar.png' style='max-height:1em;border-radius:50%' />
         }
         else
         {
-            <img src='/img/@user.Avatar' style='max-height:1em;border-radius:50%'/>
+            <img src='/img/userImg/@user.Avatar' style='max-height:1em;border-radius:50%'/>
         }
     </p>
 }

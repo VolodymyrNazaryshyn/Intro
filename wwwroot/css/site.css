@@ -72,37 +72,57 @@ body {
 
 /* ------------------- */
 
-.topic {
-    border: 2px solid lightgray;
-    box-shadow: 0 0 4px 5px lightgray;
-    margin: 5vh 5vw;
-    padding: 4vh 4vw;
-}
-
-/*#topics {
+#table {
     border-collapse: collapse;
     width: 100%;
 }
 
-#topics td, #topics th {
+#table td, #table th {
     border: 1px solid #d0d8db;
-    padding: 8px;
+    padding: 4vh 4vw;
 }
 
-#topics tr:nth-child(even) {*/
-    /* меняем цвет в нечетных топиках */
-    /*background-color: #efe2e2;
-}
-
-#topics tr:hover {*/
-    /* меняем цвет при наведении на топик */
-    /*background-color: #d0d8db;
-}
-
-#topics th {
+#table th {
     background-color: #9a3737;
     color: white;
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-}*/
+}
+
+.topic:nth-child(even) {
+    /*меняем цвет в нечетных топиках */
+    background-color: #efe2e2;
+}
+
+.topic:hover {
+    background-color: #d0d8db;
+    border: 1.1px solid #053672;
+    cursor: pointer;
+}
+
+#button-publish {
+    background-color: navajowhite;
+    border: 1.5px solid #9a3737;
+    border-radius: 5%;
+    color: #9a3737;
+    float: right;
+}
+
+#button-publish:hover {
+    background-color: #9a3737;
+    color: navajowhite;
+}
+
+#article-text {
+    border: 1.5px solid #9a3737;
+    border-radius: 5%;
+    width: 100%;
+}
+
+#unauthUser {
+    background-color: navajowhite;
+    border: 1.5px solid #9a3737;
+    margin-bottom: 1.5em;
+    padding: 7px;
+}

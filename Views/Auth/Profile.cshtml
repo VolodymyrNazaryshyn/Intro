@@ -23,11 +23,11 @@ else
                 <label for="avatar">
                     @if (user.Avatar == null)
                     {
-                        <img id="userLogo" src='/img/default_avatar.png' style="max-height:10em; margin-right:20px" />
+                        <img id="userLogo" src='/img/userImg/no-avatar.png' style="max-height:10em; margin-right:20px" />
                     }
                     else
                     {
-                        <img id="userLogo" src='/img/@user.Avatar' style="max-height:10em; margin-right:20px" />
+                        <img id="userLogo" src='/img/userImg/@user.Avatar' style="max-height:10em; margin-right:20px" />
                     }
                 </label>
 

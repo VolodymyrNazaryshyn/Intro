@@ -3,29 +3,28 @@
     ViewData["Title"] = "Topic Page";
 }
 
-<p>
-    TopicId: @ViewData["id"]
-</p>
+@if(ViewData["AuthUser"] == null)
+{
+    <div id="unauthUser">
+        <b style="color: #9a3737">Только зарегистрированные пользователи могут писать статьи.</b>
+    </div>
+}
 
 <articles topic-id='@ViewData["id"]'></articles>
 
-@if(ViewData["AuthUser"] == null)
+@if(ViewData["AuthUser"] != null)
 {
-    <i>Необходимо войти в систему </i>
-}
-else
-{
-    <b>Добавить комментарий</b>
+    <b style="color: #9a3737">Добавить статью:</b>
     <br />
     <textarea id="article-text"
         data-author-id="@((ViewData["AuthUser"] as User).Id)" 
         data-topic-id="@ViewData["id"]" 
         data-datetime="@DateTime.Now"></textarea>
     <br />
-    <span>Добавить картинку: </span>
-    <input type="file" name="picture" />
+    <b style="color: #9a3737">Добавить картинку:</b>
     <br />
-    <button id="button-publish">Опубликовать</button>
+    <input type="file" name="picture" />
+    <button id="button-publish"><b>Опубликовать</b></button>
 }
 
 <script src="~/js/topic.js"></script>

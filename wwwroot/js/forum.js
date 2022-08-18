@@ -28,43 +28,18 @@ function loadTopics(elem) {
 }
 
 function showTopics(elem, j) {
-    //// инициализируем непосредственно таблицу
-    //let table = "<table id='topics'><tr><th>Title</th><th>Description</th></tr>";
-
-    //// 1. Формируем строку из скольки угодно частей, но один раз - HTML
-    //// 2. Желательно разделить разметку и данные, не смешивать
-    ////    шаблон HTML и имена переменных -- отдельно HTML, отдельно данные
-    //// 2.1. Это позволяет работать над разметкой отдельно (не заставляем дизайнеров "залезать" в код)
-    //// 2.2. А также вынести шаблон из кода и загрузить его в AJAX
-    //let trTemplate = "<tr><td>*title</td><td>*descr</td></tr>";
-
-    //for (let topic of j) {
-    //    // заполняем таблицу топиками
-    //    table += trTemplate
-    //        .replace("*title", topic.title)
-    //        .replace("*descr", topic.description);
-    //}
-
-    //table += "</table>";
-    //elem.innerHTML = table;
-
-    // запрашиваем шаблон с сервера
-    // ~ var trTemplate = `...`;
-
     fetch("/templates/topic.html")
         .then(r => r.text())
         .then(trTemplate => {
-            var appHtml = "";
+            var appHtml = "<table id='table'><tr><th>Title</th><th>Description</th></tr>";
             for (let topic of j) { // topic - один объект из JSON
                 let tpl = trTemplate;
                 for (let prop in topic) { // цикл по свойствам (ключам) объекта (id, title, description)
                     tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
                 }
                 appHtml += tpl;
-                //appHtml += trTemplate // просто replace меняет только первое вхождение
-                //        .replaceAll("{{title}}", topic.title).replaceAll("{{description}}", topic.description).replaceAll("{{id}}", topic.id);
             }
-            elem.innerHTML = appHtml;
+            elem.innerHTML = appHtml + "</table>";
             topicLoaded();
         });
 }
