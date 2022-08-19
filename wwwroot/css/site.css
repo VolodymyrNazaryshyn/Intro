@@ -72,21 +72,19 @@ body {
 
 /* ------------------- */
 
-#table {
+#topicTable {
     border-collapse: collapse;
     width: 100%;
 }
 
-#table td, #table th {
+#topicTable td, #topicTable th {
     border: 1px solid #d0d8db;
-    padding: 4vh 4vw;
+    padding: 2vh 2vw;
 }
 
-#table th {
+#topicTable th {
     background-color: #9a3737;
     color: white;
-    padding-top: 12px;
-    padding-bottom: 12px;
     text-align: center;
 }
 

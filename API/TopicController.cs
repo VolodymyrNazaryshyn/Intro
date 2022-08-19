@@ -1,6 +1,7 @@
 ﻿using Intro.DAL.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,7 +93,7 @@ namespace Intro.API
         [HttpGet]
         public IEnumerable<DAL.Entities.Topic> Get()
         {
-            return _context.Topics;
+            return _context.Topics.Include(a => a.Author);
         }
     }
 }

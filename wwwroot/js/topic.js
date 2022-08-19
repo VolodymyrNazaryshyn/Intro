@@ -55,14 +55,22 @@ function loadArticles() {
                                  <b>{{author}}</b><br/> {{date}}
                                  <hr style='border-color:grey'>
                              </div>
-                             <p>{{text}}</p>
+                             {{articlePicture}}
+                             <div style='float: none; overflow: auto'>
+                                 <p>{{text}}</p>
+                             </div>
                          </div>`;
             for (let article of j) {
                 const moment = new Date(article.createdDate);
-                html += tpl.replaceAll("{{author}}", article.author.realName)
+                html += tpl
+                    .replaceAll("{{author}}",
+                        (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
                     .replaceAll("{{text}}", article.text)
-                    .replaceAll("{{avatar}}", (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
-                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"));
+                    .replaceAll("{{avatar}}",
+                        (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
+                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
+                    .replaceAll("{{articlePicture}}",
+                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height:14ch; width:14ch; display: block; float: left'>` : ""));
             }
             articles.innerHTML = html;
         });

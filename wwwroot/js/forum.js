@@ -15,7 +15,7 @@ function loadTopics(elem) {
                 "Culture": ""
             },
             body: null
-        }) 
+        })
         .then(r => r.json())
         .then(j => {
             if (j instanceof Array) {
@@ -28,20 +28,15 @@ function loadTopics(elem) {
 }
 
 function showTopics(elem, j) {
-    fetch("/templates/topic.html")
-        .then(r => r.text())
-        .then(trTemplate => {
-            var appHtml = "<table id='table'><tr><th>Title</th><th>Description</th></tr>";
-            for (let topic of j) { // topic - один объект из JSON
-                let tpl = trTemplate;
-                for (let prop in topic) { // цикл по свойствам (ключам) объекта (id, title, description)
-                    tpl = tpl.replaceAll(`{{${prop}}}`, topic[prop]);
-                }
-                appHtml += tpl;
-            }
-            elem.innerHTML = appHtml + "</table>";
-            topicLoaded();
-        });
+    let headerTable = "<tr><th>Title</th><th>Description</th><th>Author</th></tr>";
+    let table = "";
+    for (let topic of j) {
+        elem.innerHTML += `<div data-id='${topic.id}'>
+        <b>${topic.title}</b><i>${topic.description}</i></div>`;
+        table += `<tr class='topic' data-id='${topic.id}'><td>${topic.title}</td><td>${topic.description}</td><td>${topic.author.realName}</td></tr>`;
+    }
+    elem.innerHTML = `<table id='topicTable'>${headerTable}${table}</table>`;
+    topicLoaded();
 }
 
 async function topicLoaded() {
