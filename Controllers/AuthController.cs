@@ -238,7 +238,7 @@ namespace Intro.Controllers
                     // убеждаемся, что в имени файла нету ../ (защита от DT)
                     if (newFileName.Contains("../")) newFileName = newFileName.Replace("../", "");
 
-                    var pictures = new DirectoryInfo("./wwwroot/img").GetFiles();
+                    var pictures = new DirectoryInfo("./wwwroot/img/userImg/").GetFiles();
 
                     foreach (var picture in pictures)
                     {
@@ -249,8 +249,8 @@ namespace Intro.Controllers
                             newFileName = fileWithoutExt + Guid.NewGuid().ToString() + extension; // формируем новое имя файла
                         }
                     }
-                    // сохраняем файл в папку wwwroot/img
-                    UserData.Avatar.CopyToAsync(new FileStream("./wwwroot/img/" + newFileName, FileMode.Create));
+                    // сохраняем файл в папку wwwroot/img/userImg
+                    UserData.Avatar.CopyToAsync(new FileStream("./wwwroot/img/userImg/" + newFileName, FileMode.Create));
                 }
 
                 // если валидация пройдена (нет сообщений об ошибках) - добавляем пользователя в БД
@@ -450,13 +450,13 @@ namespace Intro.Controllers
             string IMG_Format = userAvatar.FileName.Substring(pos);
             string ImageName = _hasher.Hash(Guid.NewGuid().ToString()) + IMG_Format;
 
-            var file = new FileStream("./wwwroot/img/" + ImageName, FileMode.Create);
+            var file = new FileStream("./wwwroot/img/userImg/" + ImageName, FileMode.Create);
             userAvatar.CopyToAsync(file).ContinueWith(t => file.Dispose());
 
             if (_authService.User.Avatar != null) // если у пользователя есть Avatar
             {
                 // удаляем старый файл и заменяем у пользователя ссылку на новый файл
-                System.IO.File.Delete("./wwwroot/img/" + _authService.User.Avatar);
+                System.IO.File.Delete("./wwwroot/img/userImg/" + _authService.User.Avatar);
             }
       
             _authService.User.Avatar = ImageName;

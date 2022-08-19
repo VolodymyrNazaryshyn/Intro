@@ -62,9 +62,9 @@ function avatarChange(e) {
             .then(j => {
                 if (j.status == "Ok") {
                     // нам приходит новое имя файла, заменяем на него источник <img id="userLogo">
-                    userLogo.src = `/img/${j.message}`;
+                    userLogo.src = `/img/userImg/${j.message}`;
                     // обновляем также аватар в заголовочной строке
-                    userLogoHeader.src = `/img/${j.message}`;
+                    userLogoHeader.src = `/img/userImg/${j.message}`;
                 }
                 else {
                     alert(j.message);

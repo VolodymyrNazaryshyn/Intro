@@ -56,9 +56,7 @@ function loadArticles() {
                                  <hr style='border-color:grey'>
                              </div>
                              {{articlePicture}}
-                             <div style='float: none; overflow: auto'>
-                                 <p>{{text}}</p>
-                             </div>
+                             <p>{{text}}</p>
                          </div>`;
             for (let article of j) {
                 const moment = new Date(article.createdDate);
@@ -70,7 +68,7 @@ function loadArticles() {
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
                     .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
                     .replaceAll("{{articlePicture}}",
-                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height:14ch; width:14ch; display: block; float: left'>` : ""));
+                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height: 5em; width: 4em; display: block; float: left; margin: 4px 10px 2px 0px; border: 1px solid gray; padding: 3px'>` : ""));
             }
             articles.innerHTML = html;
         });
