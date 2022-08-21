@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Intro.DAL.Entities
 {
@@ -13,5 +15,8 @@ namespace Intro.DAL.Entities
 
         public Guid AuthorId { get; set; }
         public Entities.User Author { get; set; }
+
+        [JsonIgnore]
+        public List<Article> Articles { get; set; }
     }
 }

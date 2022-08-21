@@ -39,25 +39,15 @@ function loadArticles() {
     const articles = document.querySelector("articles");
     if (!articles) throw "articles element not found";
 
+    let tplPromise = fetch("/templates/article.html");
+
     const id = articles.getAttribute("topic-id");
     fetch(`/api/article/${id}`)
         .then(r => r.json())
-        .then(j => {
+        .then(async j => {
             console.log(j);
             var html = "";
-            const tpl = `<div style='border: 2px solid lightgray; box-shadow: 0 0 4px 5px lightgray; margin-bottom: 1em;
-                         padding: 10px; border-radius: 5%; overflow: auto; background-color:antiquewhite'>
-                             <div style='display: block; float: left'>
-                                 <img src='/img/userImg/{{avatar}}' style='height:8ch; width:8ch; 
-                                 border:1px solid grey; border-radius: 50%; background: white' />
-                             </div>
-                             <div style='float: none; overflow: auto; padding-left: 10px'>
-                                 <b>{{author}}</b><br/> {{date}}
-                                 <hr style='border-color:grey'>
-                             </div>
-                             {{articlePicture}}
-                             <p>{{text}}</p>
-                         </div>`;
+            const tpl = await tplPromise.then(r=>r.text());
             for (let article of j) {
                 const moment = new Date(article.createdDate);
                 html += tpl
@@ -68,8 +58,21 @@ function loadArticles() {
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
                     .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
                     .replaceAll("{{articlePicture}}",
-                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height: 5em; width: 4em; display: block; float: left; margin: 4px 10px 2px 0px; border: 1px solid gray; padding: 3px'>` : ""));
+                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height: 5em; width: 4em; display: block; float: left; margin: 4px 10px 2px 0px; border: 1px solid gray; padding: 3px'>` : ""))
+                    .replaceAll("{{id}}", article.id);
             }
             articles.innerHTML = html;
+            onArticlesLoaded();
         });
+}
+
+function onArticlesLoaded() {
+    // span - reply
+    for (let span of document.querySelectorAll(".article span")) {
+        span.onclick = replyClick;
+    }
+}
+
+function replyClick(e) {
+    console.log(e.target);
 }

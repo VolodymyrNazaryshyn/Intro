@@ -46,6 +46,5 @@ async function topicLoaded() {
 }
 
 function topicClick(e) {
-    window.location = "/Forum/Topic/" +
-        e.target.closest(".topic").getAttribute("data-id");
+    window.location = `/Forum/Topic/${e.target.closest(".topic").getAttribute("data-id")}`;
 }

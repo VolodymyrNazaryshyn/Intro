@@ -26,6 +26,7 @@ namespace Intro.API
         public IEnumerable Get(string id) //коллекция статей данного раздела(топика)
         {
             Guid topicId = Guid.Parse(id);
+
             return _context.Articles
                 .Include(a => a.Author)
                 .Include(a => a.Topic)

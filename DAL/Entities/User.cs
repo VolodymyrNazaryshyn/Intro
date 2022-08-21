@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -22,5 +23,7 @@ namespace Intro.DAL.Entities
         public DateTime RegMoment { get; set; }
         public DateTime? LogMoment { get; set; }
 
+        [JsonIgnore]
+        public IEnumerable<Entities.Article> Articles { get; set; }
     }
 }
