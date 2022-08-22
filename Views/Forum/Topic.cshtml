@@ -3,28 +3,31 @@
     ViewData["Title"] = "Topic Page";
 }
 
-@if(ViewData["AuthUser"] == null)
+@{
+    bool isAuthUser = ViewData["AuthUser"] != null;
+}
+
+@if(!isAuthUser)
 {
     <div id="unauthUser">
-        <b style="color: #9a3737">Только зарегистрированные пользователи могут писать статьи.</b>
+        <b style="color: #9a3737">Only registered users can write articles.</b>
     </div>
 }
 
-<articles topic-id='@ViewData["id"]'></articles>
+<articles topic-id='@ViewData["id"]' data-auth-user="@(!isAuthUser ? "false" : "true")"></articles>
 
-@if(ViewData["AuthUser"] != null)
+@if(isAuthUser)
 {
-    <b style="color: #9a3737">Добавить статью:</b>
+    <b id="addArticleLabel" style="color: #9a3737">Add article:</b>
     <br />
     <textarea id="article-text"
-        data-author-id="@((ViewData["AuthUser"] as User).Id)" 
-        data-topic-id="@ViewData["id"]" 
-        data-datetime="@DateTime.Now"></textarea>
+          data-author-id="@((ViewData["AuthUser"] as User).Id)"
+          data-topic-id="@ViewData["id"]"></textarea>
     <br />
-    <b style="color: #9a3737">Добавить картинку:</b>
+    <b style="color: #9a3737">Add picture:</b>
     <br />
     <input type="file" name="picture" />
-    <button id="button-publish"><b>Опубликовать</b></button>
+    <button id="button-publish"><b>Publish</b></button>
 }
 
 <script src="~/js/topic.js"></script>

@@ -8,13 +8,12 @@ function buttonPublishClick(e) {
     const articleText = document.getElementById("article-text");
     if (!articleText) throw "article-text element not found";
     const picture = document.querySelector("input[name=picture]");
-    if (!articleText) throw "picture element not found";
+    if (!picture) throw "picture element not found";
 
     const txt = articleText.value;
     const authorId = articleText.getAttribute("data-author-id");
     const topicId = articleText.getAttribute("data-topic-id");
 
-    //console.log(txt, authorId, topicId, picture.files);
     const formData = new FormData();
     formData.append('TopicId', topicId);
     formData.append('AuthorId', authorId);
@@ -38,6 +37,8 @@ function buttonPublishClick(e) {
 function loadArticles() {
     const articles = document.querySelector("articles");
     if (!articles) throw "articles element not found";
+    // Variable, responsible for user registration
+    const isAuthUser = articles.getAttribute("data-auth-user");
 
     let tplPromise = fetch("/templates/article.html");
 
@@ -47,7 +48,7 @@ function loadArticles() {
         .then(async j => {
             console.log(j);
             var html = "";
-            const tpl = await tplPromise.then(r=>r.text());
+            const tpl = await tplPromise.then(r => r.text());
             for (let article of j) {
                 const moment = new Date(article.createdDate);
                 html += tpl
@@ -58,8 +59,10 @@ function loadArticles() {
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
                     .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
                     .replaceAll("{{articlePicture}}",
-                        (article.pictureFile != null ? `<img src='/img/articleImg/${article.pictureFile}' style='height: 5em; width: 4em; display: block; float: left; margin: 4px 10px 2px 0px; border: 1px solid gray; padding: 3px'>` : ""))
-                    .replaceAll("{{id}}", article.id);
+                        (article.pictureFile != null ? `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>` : ""))
+                    .replaceAll("{{id}}", article.id)
+                    .replaceAll("{{articleReply}}",
+                        (isAuthUser == "true" ? "<span>&#x2936;</span>" : ""));
             }
             articles.innerHTML = html;
             onArticlesLoaded();
@@ -71,8 +74,19 @@ function onArticlesLoaded() {
     for (let span of document.querySelectorAll(".article span")) {
         span.onclick = replyClick;
     }
+
+    // By blur event change the innerText of the element
+    document.getElementById("article-text").addEventListener('blur', function () {
+        document.getElementById("addArticleLabel").innerText = "Add article:";
+    });
 }
 
 function replyClick(e) {
-    console.log(e.target);
+    const id = e.target.closest(".article").getAttribute("data-id");
+    // Show id article to console
+    console.log(id);
+    // Set focus on a text-area
+    document.getElementById("article-text").focus();
+    // Change innerText element
+    document.getElementById("addArticleLabel").innerText = `Reply to the article ${id}:`;
 }

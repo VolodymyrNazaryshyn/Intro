@@ -126,6 +126,7 @@ body {
     border: 1.5px solid #9a3737;
     margin-bottom: 1.5em;
     padding: 7px;
+    width: fit-content;
 }
 
 /* Style for ./wwwroot/templates/article.html 
@@ -157,4 +158,14 @@ body {
     border-radius: 50%;
     height: 8ch;
     width: 8ch;
+}
+
+#articlePicture {
+    border: 1px solid gray;
+    display: block;
+    float: left;
+    height: 5em;
+    margin: 4px 10px 2px 0px;
+    padding: 3px;
+    width: 4em;
 }
