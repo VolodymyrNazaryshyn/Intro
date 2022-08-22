@@ -1,29 +1,46 @@
-﻿// Событие "DOMContentLoaded" подается тогда когда готов DOM
-document.addEventListener("DOMContentLoaded", () => {
+﻿document.addEventListener("DOMContentLoaded", () => {
     // const app = document.getElementById("app"); // по ID <div id="app"></div>
     const app = document.querySelector("app"); // по имени тега <app><app>
     if (!app) throw "Forum script: APP not found";
+    const buttonPublish = document.getElementById("button-publish-topic");
+    if (buttonPublish) buttonPublish.onclick = buttonPublishClick;
+
     loadTopics(app);
 });
 
+function buttonPublishClick(e) {
+    const titleText = document.querySelector("input[name=title]");
+    if (!titleText) throw "titleText element not found";
+    const descriptionText = document.getElementById("topic-text");
+    if (!descriptionText) throw "topic-text element not found";
+
+    const txt = descriptionText.value;
+    const authorId = descriptionText.getAttribute("data-author-id");
+
+    const formData = new FormData();
+    formData.append('Title', titleText.value);
+    formData.append('Description', txt);
+    formData.append('AuthorId', authorId);
+
+    fetch("/api/topic", {
+        method: "POST",
+        body: formData
+    }).then(r => r.json())
+        .then(j => {
+            if (j.status == "Ok") {
+                titleText.value = "";
+                descriptionText.value = "";
+                loadTopics(document.querySelector("app"));
+            }
+            else alert(j.message);
+        });
+}
+
 function loadTopics(elem) {
-    fetch("/api/topic", // API topics - get all
-        {
-            method: "GET",
-            headers: {
-                "User-Id": "",
-                "Culture": ""
-            },
-            body: null
-        })
+    fetch("/api/topic")
         .then(r => r.json())
         .then(j => {
-            if (j instanceof Array) {
-                showTopics(elem, j);
-            }
-            else {
-                throw "showTopics: Backend data invalid";
-            }
+            showTopics(elem, j);
         });
 }
 

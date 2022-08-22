@@ -22,17 +22,13 @@ namespace Intro.API
             _hasher = hasher;
         }
 
+        //коллекция статей данного раздела(топика)
         [HttpGet("{id}")]
-        public IEnumerable Get(string id) //коллекция статей данного раздела(топика)
-        {
-            Guid topicId = Guid.Parse(id);
-
-            return _context.Articles
-                .Include(a => a.Author)
-                .Include(a => a.Topic)
-                .Where(a => a.TopicId == topicId)
-                .OrderBy(a => a.CreatedDate);
-        }
+        public IEnumerable Get(string id) => _context.Articles
+            .Include(a => a.Author)
+            .Include(a => a.Topic)
+            .Where(a => a.TopicId == Guid.Parse(id))
+            .OrderBy(a => a.CreatedDate);
 
         [HttpPost]
         public object Post([FromForm]Models.ArticleModel article)

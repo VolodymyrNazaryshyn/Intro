@@ -9,7 +9,7 @@
 
 @if(!isAuthUser)
 {
-    <div id="unauthUser">
+    <div class="unauthUser" style="margin-bottom: 1.5em">
         <b style="color: #9a3737">Only registered users can write articles.</b>
     </div>
 }
@@ -20,14 +20,14 @@
 {
     <b id="addArticleLabel" style="color: #9a3737">Add article:</b>
     <br />
-    <textarea id="article-text"
+    <textarea class="txt-input" id="article-text"
           data-author-id="@((ViewData["AuthUser"] as User).Id)"
           data-topic-id="@ViewData["id"]"></textarea>
     <br />
     <b style="color: #9a3737">Add picture:</b>
     <br />
     <input type="file" name="picture" />
-    <button id="button-publish"><b>Publish</b></button>
+    <button class="btn-publish" id="button-publish-article"><b>Publish article</b></button>
 }
 
 <script src="~/js/topic.js"></script>

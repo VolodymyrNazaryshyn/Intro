@@ -73,6 +73,13 @@ body {
     line-height: 60px; /* Vertically center the text there */
 }
 
+/* Style for /Auth/Profile
+-------------------------------------------------- */
+.userInput {
+    border: 1px solid black;
+    border-radius: 5%;
+}
+
 /* ------------------- */
 
 #topicTable {
@@ -83,6 +90,7 @@ body {
 #topicTable td, #topicTable th {
     border: 1px solid #d0d8db;
     padding: 2vh 2vw;
+    text-align:justify;
 }
 
 #topicTable th {
@@ -102,31 +110,32 @@ body {
     cursor: pointer;
 }
 
-#button-publish {
+.btn-publish {
     background-color: navajowhite;
     border: 1.5px solid #9a3737;
     border-radius: 5%;
     color: #9a3737;
+}
+
+.btn-publish:hover {
+    background-color: #9a3737;
+    color: navajowhite;
+}
+
+#button-publish-article {
     float: right;
 }
 
-    #button-publish:hover {
-        background-color: #9a3737;
-        color: navajowhite;
-    }
-
-#article-text {
+.txt-input {
     border: 1.5px solid #9a3737;
     border-radius: 5%;
     width: 100%;
 }
 
-#unauthUser {
+.unauthUser {
     background-color: navajowhite;
     border: 1.5px solid #9a3737;
-    margin-bottom: 1.5em;
     padding: 7px;
-    width: fit-content;
 }
 
 /* Style for ./wwwroot/templates/article.html 

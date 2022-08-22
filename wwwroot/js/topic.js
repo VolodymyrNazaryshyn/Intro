@@ -1,6 +1,7 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const buttonPublish = document.getElementById("button-publish");
+    const buttonPublish = document.getElementById("button-publish-article");
     if (buttonPublish) buttonPublish.onclick = buttonPublishClick;
+
     loadArticles();
 });
 
@@ -21,6 +22,7 @@ function buttonPublishClick(e) {
     if (picture.files.length > 0) {
         formData.append('Picture', picture.files[0]);
     }
+
     fetch("/api/article", {
         method: "POST",
         body: formData

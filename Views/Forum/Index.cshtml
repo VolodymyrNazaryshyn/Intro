@@ -1,9 +1,35 @@
-﻿@{
+﻿@using Intro.DAL.Entities
+@{
     ViewData["Title"] = "Forum Page";
+}
+
+@{
+    bool isAuthUser = ViewData["AuthUser"] != null;
+}
+
+@if(!isAuthUser)
+{
+    <div class="unauthUser">
+        <b style="color: #9a3737">Only registered users can write topics.</b>
+    </div>
 }
 
 <!-- Котейнер приложения - этот блок будет заполняться JavaScript -->
 <app></app>
+
+@if(isAuthUser)
+{
+    <b style="color: #9a3737">Add topic title:</b>
+    <br />
+    <input class="txt-input" type="text" name="title" />
+    <br />
+    <b style="color: #9a3737">Add topic description:</b>
+    <br />
+    <textarea class="txt-input" id="topic-text"
+          data-author-id="@((ViewData["AuthUser"] as User).Id)"></textarea>
+    <br />
+    <button class="btn-publish" id="button-publish-topic"><b>Publish topic</b></button>
+}
 
 <!-- Скрипт приложения (само приложение JavaScript) -->
 <script src="~/js/forum.js"></script>
