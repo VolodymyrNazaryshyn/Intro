@@ -9,25 +9,24 @@
 
 @if(!isAuthUser)
 {
-    <div class="unauthUser" style="margin-bottom: 1.5em">
-        <b style="color: #9a3737">Only registered users can write articles.</b>
-    </div>
+    <div class="unauth-user-article">Only registered users can write articles.</div>
 }
 
 <articles topic-id='@ViewData["id"]' data-auth-user="@(!isAuthUser ? "false" : "true")"></articles>
 
 @if(isAuthUser)
 {
-    <b id="addArticleLabel" style="color: #9a3737">Add article:</b>
-    <br />
-    <textarea class="txt-input" id="article-text"
-          data-author-id="@((ViewData["AuthUser"] as User).Id)"
-          data-topic-id="@ViewData["id"]"></textarea>
-    <br />
-    <b style="color: #9a3737">Add picture:</b>
-    <br />
-    <input type="file" name="picture" />
-    <button class="btn-publish" id="button-publish-article"><b>Publish article</b></button>
+    <div class="add-article">
+        <span id="addArticleSpan">Add article:</span>
+        <textarea id="article-text"
+              data-author-id="@((ViewData["AuthUser"] as User).Id)"
+              data-topic-id="@ViewData["id"]"></textarea>
+        <span>Add picture:</span>
+        <em>
+            <input type="file" name="picture" />
+            <button id="button-publish-article"><b>Publish article</b></button>
+        </em>
+    </div>
 }
 
 <script src="~/js/topic.js"></script>

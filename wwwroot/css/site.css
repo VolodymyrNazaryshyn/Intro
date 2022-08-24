@@ -2,14 +2,15 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-    white-space: normal;
     text-align: center;
+    white-space: normal;
     word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
     color: #0366d6;
+    font-weight: 600;
 }
 
 .btn-primary {
@@ -53,6 +54,8 @@ button.accept-policy {
     line-height: inherit;
 }
 
+/* ===================================== Styles ===================================== */
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -62,93 +65,173 @@ html {
 
 body {
     /* Margin bottom by footer height */
+    background: url("../img/appImg/background-image.jpg"); /* фоновый рисунок */
+    background-attachment: fixed; /* фон страницы фиксируется */
     margin-bottom: 60px;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+.site-header {
+    background-color: red;
 }
 
-/* Style for /Auth/Profile
+.footer {
+    background-color: tan;
+    bottom: 0;
+    line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    width: 100%;
+    white-space: nowrap;
+}
+
+/* Style for /Auth/Profile.cshtml
 -------------------------------------------------- */
 .userInput {
     border: 1px solid black;
     border-radius: 5%;
 }
 
-/* ------------------- */
-
-#topicTable {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-#topicTable td, #topicTable th {
-    border: 1px solid #d0d8db;
-    padding: 2vh 2vw;
-    text-align:justify;
-}
-
-#topicTable th {
-    background-color: #9a3737;
-    color: white;
+/* Style for /Forum/Index.cshtml
+-------------------------------------------------- */
+/* Only registered users can write topics */
+.unauth-user-topic {
+    background-color: navajowhite;
+    border: 1.5px solid #9a3737;
+    color: #9a3737;
+    font-weight: bold;
+    padding: 7px;
     text-align: center;
 }
 
+/* table */
+.topicTable {
+    border-left: .5px solid #9a3737;
+    border-right: .5px solid #9a3737;
+}
+
+/* table header */
+.topicTable tr th {
+    background-color: #9a3737;
+    color: white;
+    padding: 2vh 2vw;
+    text-align: center;
+}
+
+/* separator between table columns in header */
+.topicTable tr th:nth-child(even) {
+    border-left: 1px solid #d0d8db;
+    border-right: 1px solid #d0d8db;
+}
+
+/* remove the separator between columns in the header on the right of the table */
+.topicTable tr th:last-child {
+    border-right: 0px;
+}
+
+/* topics */
+.topicTable tr td {
+    border-bottom: .5px solid #9a3737;
+    padding: 2vh 2vw;
+    text-align: justify;
+}
+
+/* separator between table columns */
+.topicTable tr td:nth-child(even) {
+    border-left: .5px solid #9a3737;
+    border-right: .5px solid #9a3737;
+}
+
+/* нечетные топики */
 .topic:nth-child(even) {
-    /* меняем цвет в нечетных топиках */
     background-color: #efe2e2;
+}
+
+/* четные топики */
+.topic:nth-child(odd) {
+    background-color: #fff;
 }
 
 .topic:hover {
     background-color: #d0d8db;
-    border: 1.1px solid #053672;
     cursor: pointer;
 }
 
-.btn-publish {
+/* span "Add topic title", "Add topic description" */
+.add-topic span {
+    color: #9a3737;
+    font-weight: bold;
+}
+
+/* input, textarea */
+.add-topic input, .add-topic textarea {
+    border: 1.5px solid #9a3737;
+    border-radius: 5%;
+    width: 100%;
+}
+
+/* publish button */
+.add-topic button, .add-article em button {
     background-color: navajowhite;
     border: 1.5px solid #9a3737;
     border-radius: 5%;
     color: #9a3737;
 }
 
-.btn-publish:hover {
+/* publish button hover */
+.add-topic button:hover, .add-article em button:hover {
     background-color: #9a3737;
     color: navajowhite;
 }
 
-#button-publish-article {
+/* Style for /Forum/Topic.cshtml
+-------------------------------------------------- */
+/* Only registered users can write articles */
+.unauth-user-article {
+    background-color: navajowhite;
+    border: 1.5px solid #9a3737;
+    color: #9a3737;
+    font-weight: bold;
+    margin: auto;
+    padding: 7px;
+    text-align: center;
+    width: 75vw;
+}
+
+/* span "Add article", "Add picture" */
+.add-article span {
+    color: #9a3737;
+    display: block;
+    font-weight: bold;
+    margin: auto;
+    width: 75vw;
+}
+
+.add-article textarea {
+    border: 1.5px solid #9a3737;
+    border-radius: 5%;
+}
+
+.add-article textarea, .add-article em {
+    display: block;
+    margin: auto;
+    width: 75vw;
+}
+
+.add-article em button {
     float: right;
 }
 
-.txt-input {
-    border: 1.5px solid #9a3737;
-    border-radius: 5%;
-    width: 100%;
-}
-
-.unauthUser {
-    background-color: navajowhite;
-    border: 1.5px solid #9a3737;
-    padding: 7px;
-}
-
-/* Style for ./wwwroot/templates/article.html 
+/* Style for ./wwwroot/templates/article.html
 -------------------------------------------------- */
+/* блок публикации */
 .article {
     background-color: antiquewhite;
-    border: 2px solid lightgray;
-    border-radius: 5%;
-    box-shadow: 0 0 4px 5px lightgray;
-    margin-bottom: 1em;
-    padding: 10px;
+    border: 2px solid brown;
+    box-shadow: 3px 3px 2px 1px lightsalmon;
+    margin: 10px auto;
+    width: 75vw;
 }
 
+/* "кнопка" ответить (reply) */
 .article span {
     cursor: pointer;
     float: right;
@@ -158,23 +241,55 @@ body {
 
 .article span:hover {
     color: darkred;
-    font-size: xx-large;
 }
 
-.article div img {
-    background: white;
-    border: 1px solid grey;
-    border-radius: 50%;
-    height: 8ch;
-    width: 8ch;
-}
-
-#articlePicture {
-    border: 1px solid gray;
-    display: block;
+/* блок имени автора и его картинки */
+.article em {
+    border-right: 1px solid brown;
+    border-bottom: 1px solid brown;
     float: left;
-    height: 5em;
-    margin: 4px 10px 2px 0px;
-    padding: 3px;
-    width: 4em;
+    margin-right: 3px;
+    width: 120px;
+}
+
+/* автор (имя) */
+.article em b {
+    display: block;
+    text-align: center;
+}
+
+/* картинка */
+.article em img {
+    background-color: transparent;
+    max-width: 100%;
+}
+
+/* дата публикации */
+.article i {
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+/* линия-разделитель под датой */
+.article hr {
+    margin-left: 120px;
+    margin-top: 0px;
+    background-color: brown;
+}
+
+/* текст статьи */
+.article p {
+    margin: -1ch 1ch 1ch 1ch;
+    padding: .5ch;
+    text-align: justify;
+}
+
+/* картинка в тексте (статье) */
+#articlePicture {
+    float: left;
+    margin-right: 1ch;
+    margin-bottom: 1ch;
+    max-width: 60px;
+    max-height: 100px;
 }

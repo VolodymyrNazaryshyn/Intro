@@ -37,23 +37,24 @@ function buttonPublishClick(e) {
 }
 
 function loadTopics(elem) {
+    var tplPromise = fetch("/templates/topic.html");
+
     fetch("/api/topic")
         .then(r => r.json())
-        .then(j => {
-            showTopics(elem, j);
+        .then(async j => {
+            const headerTable = "<tr><th>Title</th><th>Description</th><th>Author</th></tr>";
+            const tpl = await tplPromise.then(r => r.text());
+            var table = "";
+            for (let topic of j) {
+                table += tpl
+                    .replaceAll("{{id}}", topic.id)
+                    .replaceAll("{{title}}", topic.title)
+                    .replaceAll("{{description}}", topic.description)
+                    .replaceAll("{{author}}", topic.author.realName);
+            }
+            elem.innerHTML = `<table class='topicTable'>${headerTable}${table}</table>`;
+            topicLoaded();
         });
-}
-
-function showTopics(elem, j) {
-    let headerTable = "<tr><th>Title</th><th>Description</th><th>Author</th></tr>";
-    let table = "";
-    for (let topic of j) {
-        elem.innerHTML += `<div data-id='${topic.id}'>
-        <b>${topic.title}</b><i>${topic.description}</i></div>`;
-        table += `<tr class='topic' data-id='${topic.id}'><td>${topic.title}</td><td>${topic.description}</td><td>${topic.author.realName}</td></tr>`;
-    }
-    elem.innerHTML = `<table id='topicTable'>${headerTable}${table}</table>`;
-    topicLoaded();
 }
 
 async function topicLoaded() {

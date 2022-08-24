@@ -29,7 +29,8 @@ function buttonPublishClick(e) {
     }).then(r => r.json())
         .then(j => {
             if (j.status == "Ok") {
-                articleText.value = ""; // Clear message text
+                articleText.value = "";
+                picture.value = '';
                 loadArticles();
             }
             else alert(j.message);
@@ -41,16 +42,14 @@ function loadArticles() {
     if (!articles) throw "articles element not found";
     // Variable, responsible for user registration
     const isAuthUser = articles.getAttribute("data-auth-user");
-
-    let tplPromise = fetch("/templates/article.html");
-
     const id = articles.getAttribute("topic-id");
+    var tplPromise = fetch("/templates/article.html");
+
     fetch(`/api/article/${id}`)
         .then(r => r.json())
         .then(async j => {
-            console.log(j);
-            var html = "";
             const tpl = await tplPromise.then(r => r.text());
+            var html = "";
             for (let article of j) {
                 const moment = new Date(article.createdDate);
                 html += tpl
@@ -61,10 +60,12 @@ function loadArticles() {
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
                     .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
                     .replaceAll("{{articlePicture}}",
-                        (article.pictureFile != null ? `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>` : ""))
+                        (article.pictureFile == null ? "" : `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>`))
                     .replaceAll("{{id}}", article.id)
                     .replaceAll("{{articleReply}}",
-                        (isAuthUser == "true" ? "<span>&#x2936;</span>" : ""));
+                        (isAuthUser == "false" ? "" : "<span>&#x2936;</span>"))
+                    .replaceAll("{{reply}}",
+                        (article.replyId == null ? "" : article.replyId));
             }
             articles.innerHTML = html;
             onArticlesLoaded();
@@ -79,7 +80,7 @@ function onArticlesLoaded() {
 
     // By blur event change the innerText of the element
     document.getElementById("article-text").addEventListener('blur', function () {
-        document.getElementById("addArticleLabel").innerText = "Add article:";
+        document.getElementById("addArticleSpan").innerText = "Add article:";
     });
 }
 
@@ -90,5 +91,5 @@ function replyClick(e) {
     // Set focus on a text-area
     document.getElementById("article-text").focus();
     // Change innerText element
-    document.getElementById("addArticleLabel").innerText = `Reply to the article ${id}:`;
+    document.getElementById("addArticleSpan").innerText = `Reply to the article ${id}:`;
 }

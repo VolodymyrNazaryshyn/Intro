@@ -1,13 +1,12 @@
 ﻿<div class="article" data-id="{{id}}">
     {{articleReply}}
-    <div style='float: left'>
+    <em>
+        <b>{{author}}</b>
         <img src='/img/userImg/{{avatar}}' />
-    </div>
-    <div style='padding-left: 5em'>
-        <b>{{author}}</b><br />{{date}}
-        <hr style='border-color:grey'>
-    </div>
-    {{articlePicture}}
-    <p align="justify">{{text}}</p>
+    </em>
+    <i>{{date}}</i> 
+    <cite>{{reply}}</cite>
+    <hr />
+    <p>{{articlePicture}}{{text}}</p>
     <div style="clear: both"></div>
 </div>

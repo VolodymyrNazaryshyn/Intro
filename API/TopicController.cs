@@ -18,7 +18,8 @@ namespace Intro.API
         }
 
         [HttpGet]
-        public IEnumerable Get() => _context.Topics.Include(t => t.Author);
+        public IEnumerable Get() => _context.Topics
+            .Include(t => t.Author).OrderBy(t => t.LastArticleMoment);
 
         [HttpPost]
         public object Post([FromForm]Models.TopicModel topic)
@@ -36,20 +37,6 @@ namespace Intro.API
                 return new { status = "Error", message = "Empty Description" };
             }
 
-            //// Задание: Добавить анализ заголовка Culture (xx-xx) uk-ua
-            //String[] SupportedCultures = new string[] { "uk-ua", "en-gb" };
-            //String CultureHeader = HttpContext.Request.Headers["Culture"].ToString().ToLower();
-            //if (Array.IndexOf(SupportedCultures, CultureHeader) == -1)
-            //{
-            //    return new
-            //    {
-            //        status = "Error",
-            //        message = "Culture Header empty or invalid or not supported"
-            //    };
-            //}
-            //// Переносим информацию о локализации (культуре) в заголовки ответа
-            //HttpContext.Response.Headers.Add("Culture", CultureHeader);
-
             // поиск пользователя в БД
             if (_context.Users.Find(topic.AuthorId) == null)
             {
@@ -62,13 +49,19 @@ namespace Intro.API
                 return new { status = "Error", message = $"Topic '{topic.Title}' does exist" };
             }
 
+            DateTime now = DateTime.Now;
+
             _context.Topics.Add(new()
             {
                 Title = topic.Title,
                 Description = topic.Description,
-                AuthorId = topic.AuthorId
+                AuthorId = topic.AuthorId,
+                CreatedTime = now,
+                LastArticleMoment = now
             });
+
            _context.SaveChanges();
+
             return new { status = "Ok" };
         }
     }

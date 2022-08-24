@@ -48,7 +48,8 @@ namespace Intro.API
                 return new { status = "Error", message = "Invalid Author" };
             }
             // Есть ли раздел (топик) с переданным ID?
-            if(_context.Topics.Find(article.TopicId) == null)
+            var topic = _context.Topics.Find(article.TopicId);
+            if(topic == null)
             {
                 return new { status = "Error", message = "Invalid Topic" };
             }
@@ -83,15 +84,21 @@ namespace Intro.API
                 article.Picture.CopyToAsync(file).ContinueWith(t => file.Dispose());
             }
 
+            DateTime now = DateTime.Now;
+
             _context.Articles.Add(new()
             {
                 AuthorId = article.AuthorId,
                 TopicId = article.TopicId,
-                CreatedDate = DateTime.Now,
+                CreatedDate = now,
                 PictureFile = newFileName,
                 Text = article.Text,
                 ReplyId = article.ReplyId
             });
+
+            // Обновляем таблицу Topic - дата последней статьи
+            topic.LastArticleMoment = now;
+            
             _context.SaveChanges();
             return new { status = "Ok" };
         }

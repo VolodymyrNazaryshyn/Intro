@@ -16,6 +16,9 @@ namespace Intro.DAL.Entities
         public Guid AuthorId { get; set; }
         public Entities.User Author { get; set; }
 
+        public DateTime CreatedTime { get; set; }
+        public DateTime LastArticleMoment { get; set; }
+
         [JsonIgnore]
         public List<Article> Articles { get; set; }
     }
