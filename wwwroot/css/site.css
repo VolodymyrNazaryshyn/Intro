@@ -65,17 +65,13 @@ html {
 
 body {
     /* Margin bottom by footer height */
-    background: url("../img/appImg/background-image.jpg"); /* фоновый рисунок */
+    background: url("../img/appImg/background-image.jpg") center; /* фоновый рисунок */
     background-attachment: fixed; /* фон страницы фиксируется */
+    background-size: cover;
     margin-bottom: 60px;
 }
 
-.site-header {
-    background-color: red;
-}
-
 .footer {
-    background-color: tan;
     bottom: 0;
     line-height: 60px; /* Vertically center the text there */
     position: absolute;
