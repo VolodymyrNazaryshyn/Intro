@@ -52,24 +52,52 @@ function loadArticles() {
             var html = "";
             for (let article of j) {
                 const moment = new Date(article.createdDate);
+                var replyText = showReplyText(j, article.replyId);
+                var replyAuthor = showReplyAuthorName(j, article.replyId);
+                var replyMoment = new Date(showReplyCreatedDate(j, article.replyId));
                 html += tpl
-                    .replaceAll("{{author}}",
-                        (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
-                    .replaceAll("{{text}}", article.text)
-                    .replaceAll("{{avatar}}",
-                        (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
-                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
-                    .replaceAll("{{articlePicture}}",
-                        (article.pictureFile == null ? "" : `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>`))
                     .replaceAll("{{id}}", article.id)
                     .replaceAll("{{articleReply}}",
                         (isAuthUser == "false" ? "" : "<span>&#x2936;</span>"))
+                    .replaceAll("{{author}}",
+                        (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
+                    .replaceAll("{{avatar}}",
+                        (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
+                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
+                    .replaceAll("{{tooltip}}", `Article: ${replyText}\r\nAuthor: ${replyAuthor}.\r\nCreated Date: ${replyMoment.toLocaleString("uk-UA")}`)
                     .replaceAll("{{reply}}",
-                        (article.replyId == null ? "" : article.replyId));
+                        (article.replyId == null ? "" : `Reply to article "${(replyText.length > 15 ? `${replyText.substring(0, 15)}...` : replyText)}"`))
+                    .replaceAll("{{articlePicture}}",
+                        (article.pictureFile == null ? "" : `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>`))
+                    .replaceAll("{{text}}", article.text);
             }
             articles.innerHTML = html;
             onArticlesLoaded();
         });
+}
+
+function showReplyText(arr, replyId) {
+    for (article of arr) {
+        if (article.id == replyId) {
+            return article.text;
+        }
+    }
+}
+
+function showReplyAuthorName(arr, replyId) {
+    for (article of arr) {
+        if (article.id == replyId) {
+            return article.author.realName;
+        }
+    }
+}
+
+function showReplyCreatedDate(arr, replyId) {
+    for (article of arr) {
+        if (article.id == replyId) {
+            return article.createdDate;
+        }
+    }
 }
 
 function onArticlesLoaded() {
