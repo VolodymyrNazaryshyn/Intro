@@ -27,8 +27,9 @@ namespace Intro.API
         public IEnumerable Get(string id) => _context.Articles
             .Include(a => a.Author)
             .Include(a => a.Topic)
-            .Where(a => a.TopicId == Guid.Parse(id))
-            .OrderBy(a => a.CreatedDate);
+            .Include(a => a.Reply)
+            .Where(a => a.TopicId == Guid.Parse(id) && a.DeleteMoment == null)
+            .OrderBy(a => a.CreatedMoment);
 
         [HttpPost]
         public object Post([FromForm]Models.ArticleModel article)
@@ -52,6 +53,14 @@ namespace Intro.API
             if(topic == null)
             {
                 return new { status = "Error", message = "Invalid Topic" };
+            }
+            // Есть ли ответ (replyId) и проверка на существование
+            if(article.ReplyId != null)
+            {
+                if(_context.Articles.Find(article.ReplyId) == null)
+                {
+                    return new { status = "Error", message = "Invalid Reply Id" };
+                }
             }
 
             string newFileName = null;
@@ -90,7 +99,7 @@ namespace Intro.API
             {
                 AuthorId = article.AuthorId,
                 TopicId = article.TopicId,
-                CreatedDate = now,
+                CreatedMoment = now,
                 PictureFile = newFileName,
                 Text = article.Text,
                 ReplyId = article.ReplyId

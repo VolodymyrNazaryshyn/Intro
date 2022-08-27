@@ -19,6 +19,8 @@ POST - Create	| иногда
 PUT - Update	| наоборот
 DELETE - Delete
 
+REST - используется как синоним API+CRUD
+
 Client										  Server (API / REST / CRUD)
 (Not browser)		GET	/api/user		      Controller(/api/user)
 HTTP request ------------------------------>	Get() {...}

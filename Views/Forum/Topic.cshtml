@@ -16,12 +16,16 @@
 
 @if(isAuthUser)
 {
-    <div class="add-article">
-        <span id="addArticleSpan">Add article:</span>
+    <div class="container-add-article">
+        <div class="addArticle">
+            <span id="addArticleSpan">Add article:</span>
+            <span id="refuseReplyArticle" title="Refuse" style="display:none">&#x274C;</span>
+        </div>
         <textarea id="article-text"
               data-author-id="@((ViewData["AuthUser"] as User).Id)"
-              data-topic-id="@ViewData["id"]"></textarea>
-        <span>Add picture:</span>
+              data-topic-id="@ViewData["id"]"
+              data-reply-id=""></textarea>
+        <span class="addPictureSpan">Add picture:</span>
         <em>
             <input type="file" name="picture" />
             <button id="button-publish-article"><b>Publish article</b></button>

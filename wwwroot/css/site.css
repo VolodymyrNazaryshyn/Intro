@@ -116,7 +116,7 @@ body {
 }
 
 /* publish button */
-.add-topic button, .add-article em button {
+.add-topic button, .container-add-article em button {
     background-color: navajowhite;
     border: 1.5px solid #9a3737;
     border-radius: 5%;
@@ -124,7 +124,7 @@ body {
 }
 
 /* publish button hover */
-.add-topic button:hover, .add-article em button:hover {
+.add-topic button:hover, .container-add-article em button:hover {
     background-color: #9a3737;
     color: navajowhite;
 }
@@ -144,26 +144,44 @@ body {
 }
 
 /* span "Add article", "Add picture" */
-.add-article span {
+.container-add-article {
     color: #9a3737;
-    display: block;
     font-weight: bold;
     margin: auto;
     width: 75vw;
 }
 
-.add-article textarea {
+.addArticle {
+    margin: auto;
+    width: 75vw;
+}
+
+.addPictureSpan {
+    margin: auto;
+    width: 75vw;
+}
+
+#refuseReplyArticle {
+    float: left;
+    margin-right: 10px;
+}
+
+#refuseReplyArticle:hover {
+    cursor: pointer;
+}
+
+.container-add-article textarea {
     border: 1.5px solid #9a3737;
     border-radius: 5%;
 }
 
-.add-article textarea, .add-article em {
+.container-add-article textarea, .container-add-article em {
     display: block;
     margin: auto;
     width: 75vw;
 }
 
-.add-article em button {
+.container-add-article em button {
     float: right;
 }
 
@@ -185,6 +203,15 @@ body {
     font-size: x-large;
     margin: -5px 10px 0 0;
 }
+
+/* "кнопка" удалить статью или комментарий (delete) */
+.article del {
+    cursor: pointer;
+    float: right;
+    margin-right: .5em;
+    margin-top: 3px;
+    text-decoration: none;
+} 
 
 .article span:hover {
     color: darkred;

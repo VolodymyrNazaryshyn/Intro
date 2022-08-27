@@ -1,6 +1,4 @@
-﻿var replyId = null;
-
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const buttonPublish = document.getElementById("button-publish-article");
     if (buttonPublish) buttonPublish.onclick = buttonPublishClick;
 
@@ -16,20 +14,19 @@ function buttonPublishClick(e) {
     const txt = articleText.value;
     const authorId = articleText.getAttribute("data-author-id");
     const topicId = articleText.getAttribute("data-topic-id");
-
-    // By blur event change the innerText of the element
-    document.getElementById("article-text").addEventListener('blur', function () {
-        document.getElementById("addArticleSpan").innerText = "Add article:";
-    });
+    let replyId = articleText.getAttribute("data-reply-id");
 
     const formData = new FormData();
     formData.append('TopicId', topicId);
     formData.append('AuthorId', authorId);
     formData.append('Text', txt);
-    formData.append('ReplyId', (replyId == null ? "" : replyId));
+    formData.append('ReplyId', replyId);
     if (picture.files.length > 0) {
         formData.append('Picture', picture.files[0]);
     }
+
+    const addArticleSpan = document.getElementById("addArticleSpan");
+    const refuseReplyArticle = document.getElementById("refuseReplyArticle");
 
     fetch("/api/article", {
         method: "POST",
@@ -37,9 +34,11 @@ function buttonPublishClick(e) {
     }).then(r => r.json())
         .then(j => {
             if (j.status == "Ok") {
-                articleText.value = "";
+                articleText.value = ""; // Clear message field
                 picture.value = '';
-                replyId = null;
+                articleText.setAttribute("data-reply-id", ""); // Clear reply-id
+                addArticleSpan.innerText = "Add article:";
+                refuseReplyArticle.style.display = "none";
                 loadArticles();
             }
             else alert(j.message);
@@ -54,72 +53,68 @@ function loadArticles() {
     const id = articles.getAttribute("topic-id");
     var tplPromise = fetch("/templates/article.html");
 
+    const articleText = document.getElementById("article-text");
+    const authorId = (articleText) ? articleText.getAttribute("data-author-id") : "-";
+
     fetch(`/api/article/${id}`)
         .then(r => r.json())
         .then(async j => {
             const tpl = await tplPromise.then(r => r.text());
             var html = "";
             for (let article of j) {
-                const moment = new Date(article.createdDate);
-                const replyText = showReplyText(j, article.replyId);
-                const replyAuthor = showReplyAuthorName(j, article.replyId);
-                const replyMoment = new Date(showReplyCreatedDate(j, article.replyId));
+                const moment = new Date(article.createdMoment);
+                const replyMoment = new Date(article.reply?.createdMoment);
                 html += tpl
                     .replaceAll("{{id}}", article.id)
-                    .replaceAll("{{articleReply}}",
-                        (isAuthUser == "false" ? "" : "<span>&#x2936;</span>"))
+                    .replaceAll("{{reply-display}}",
+                        (isAuthUser == "false" ? "none" : "inline-block"))
+                    .replace("{{del-display}}",
+                        (article.authorId == authorId ? "inline-block" : "none"))
                     .replaceAll("{{author}}",
                         (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
                     .replaceAll("{{avatar}}",
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
                     .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
-                    .replaceAll("{{tooltip}}", `Article: ${replyText}\r\nAuthor: ${replyAuthor}.\r\nCreated Date: ${replyMoment.toLocaleString("uk-UA")}`)
+                    .replaceAll("{{tooltip}}",
+                        (article.replyId == null ? "" : `Article: ${article.reply.text}\r\nAuthor: ${article.reply.author.realName}.\r\nCreated moment: ${replyMoment.toLocaleString("uk-UA")}`))
                     .replaceAll("{{reply}}",
-                        (article.replyId == null ? "" : `Reply to article "${(replyText.length > 15 ? `${replyText.substring(0, 15)}...` : replyText)}"`))
+                        (article.replyId == null ? "" : `Reply to "${article.reply.text.substring(0, 15)}${article.reply.text.length > 15 ? "..." : ""}" by <b>${article.reply.author.realName}</b>`))
                     .replaceAll("{{articlePicture}}",
                         (article.pictureFile == null ? "" : `<img id="articlePicture" src='/img/articleImg/${article.pictureFile}'>`))
                     .replaceAll("{{text}}", article.text);
             }
             articles.innerHTML = html;
-            onArticlesLoaded();
+            onArticlesLoaded(j);
         });
 }
 
-function showReplyText(arr, replyId) {
-    for (article of arr) {
-        if (article.id == replyId) {
-            return article.text;
-        }
-    }
-}
+function onArticlesLoaded(j) {
+    const articleText = document.getElementById("article-text");
+    if (!articleText) throw "article-text element not found";
+    const refuseReplyArticle = document.getElementById("refuseReplyArticle");
+    const addArticleSpan = document.getElementById("addArticleSpan");
 
-function showReplyAuthorName(arr, replyId) {
-    for (article of arr) {
-        if (article.id == replyId) {
-            return article.author.realName;
-        }
-    }
-}
-
-function showReplyCreatedDate(arr, replyId) {
-    for (article of arr) {
-        if (article.id == replyId) {
-            return article.createdDate;
-        }
-    }
-}
-
-function onArticlesLoaded() {
     // span - reply
     for (let span of document.querySelectorAll(".article span")) {
-        span.onclick = replyClick;
-    }
-}
+        span.onclick = function(e) {
+            const replyId = e.target.closest(".article").getAttribute("data-id");
 
-function replyClick(e) {
-    replyId = e.target.closest(".article").getAttribute("data-id");
-    // Set focus on a text-area
-    document.getElementById("article-text").focus();
-    // Change innerText element
-    document.getElementById("addArticleSpan").innerText = `Reply to the article ${replyId}:`;
+            articleText.setAttribute("data-reply-id", replyId);
+            articleText.focus(); // Set focus on a text-area
+            
+            refuseReplyArticle.style.display = "inline-block";
+
+            for (let article of j) {
+                if (article.id == replyId) {
+                    addArticleSpan.innerText = `Reply to "${article.text.substring(0, 15)}${article.text.length > 15 ? "..." : ""}" by ${article.author.realName}:`;
+                }
+            }
+        };
+    }
+
+    refuseReplyArticle.addEventListener("click", function() {
+        articleText.setAttribute("data-reply-id", ""); // Clear reply-id
+        addArticleSpan.innerText = "Add article:";
+        refuseReplyArticle.style.display = "none";
+    });
 }
