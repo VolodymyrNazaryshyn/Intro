@@ -68,8 +68,10 @@ function loadArticles() {
                     .replaceAll("{{id}}", article.id)
                     .replaceAll("{{reply-display}}",
                         (isAuthUser == "false" ? "none" : "inline-block"))
-                    .replace("{{del-display}}",
+                    .replaceAll("{{del-display}}",
                         (article.authorId == authorId ? "inline-block" : "none"))
+                    .replaceAll("{{edit-display}}",
+                        (isDisplayEdit(j, article.authorId, article.replyId, article.id) ? "inline-block" : "none"))
                     .replaceAll("{{author}}",
                         (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
                     .replaceAll("{{avatar}}",
@@ -88,13 +90,39 @@ function loadArticles() {
         });
 }
 
+function isDisplayEdit(j, artAuthorId, artReplyId, artId) {
+    const articleText = document.getElementById("article-text");
+    const authorId = (articleText) ? articleText.getAttribute("data-author-id") : "-";
+
+    // если статья "своя" (её написал этот пользователь)
+    if (artAuthorId == authorId) {
+        // если на статью есть ответ
+        for (let article of j) {
+            if (artReplyId == article.id) {
+                return true; // display: inline-block
+            }
+            if (artId == article.replyId) {
+                return false; // display: none
+            }
+        }
+        // если на статью нет ответов
+        if (artReplyId == null) {
+            return true; // display: inline-block
+        }
+    }
+    // если статья "не своя" (её не писал этот пользователь)
+    else {
+        return false; // display: none
+    }
+}
+
 function onArticlesLoaded(j) {
     const articleText = document.getElementById("article-text");
     if (!articleText) throw "article-text element not found";
     const refuseReplyArticle = document.getElementById("refuseReplyArticle");
     const addArticleSpan = document.getElementById("addArticleSpan");
 
-    // span - reply
+    // reply-article button: element span
     for (let span of document.querySelectorAll(".article span")) {
         span.onclick = function(e) {
             const replyId = e.target.closest(".article").getAttribute("data-id");
@@ -112,9 +140,19 @@ function onArticlesLoaded(j) {
         };
     }
 
+    // delete-article button: element del
+    for (let del of document.querySelectorAll(".article del")) {
+        del.onclick = deleteClick; // Создаем обработчик нажатия на кнопку "удалить" публикацию
+    }
+
     refuseReplyArticle.addEventListener("click", function() {
         articleText.setAttribute("data-reply-id", ""); // Clear reply-id
         addArticleSpan.innerText = "Add article:";
         refuseReplyArticle.style.display = "none";
     });
+}
+
+function deleteClick(e) {
+    const id = e.target.closest(".article").getAttribute("data-id");
+    console.log(id); // Получаем и выводим на консоль id публикации (на удаление)
 }

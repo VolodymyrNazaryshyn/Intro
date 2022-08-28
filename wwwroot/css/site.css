@@ -211,6 +211,15 @@ body {
     margin-right: .5em;
     margin-top: 3px;
     text-decoration: none;
+}
+
+/* "кнопка" редактировать статью или комментарий (edit) */
+.article ins {
+    cursor: pointer;
+    float: right;
+    margin-right: .5em;
+    margin-top: 3px;
+    text-decoration: none;
 } 
 
 .article span:hover {
