@@ -276,3 +276,66 @@ body {
     max-width: 60px;
     max-height: 100px;
 }
+
+/* Style for ./wwwroot/templates/junk.html
+-------------------------------------------------- */
+/* table */
+.junkTable {
+    border-left: .5px solid #9a3737;
+    border-right: .5px solid #9a3737;
+}
+
+/* table header */
+.junkTable tr th {
+    background-color: #9a3737;
+    color: white;
+    padding: 2vh 2vw;
+    text-align: center;
+}
+
+/* separator between table columns in header */
+.junkTable tr th:nth-child(even) {
+    border-left: 1px solid #d0d8db;
+    border-right: 1px solid #d0d8db;
+}
+
+/* separator between columns in the header on the right of the table */
+.junkTable tr th:last-child {
+    border-right: 0px;
+}
+
+/* restore junk */
+.junkTable tr td:last-child {
+    font-size: xx-large;
+    text-align: center;
+}
+
+/* restore junk hover */
+.junkTable tr td:last-child:hover {
+    cursor: pointer;
+    color: #9a3737;
+    font-weight: bolder;
+}
+
+/* junks */
+.junkTable tr td {
+    border-bottom: .5px solid #9a3737;
+    padding: 2vh 2vw;
+    text-align: justify;
+}
+
+/* separator between table columns */
+.junkTable tr td:nth-child(even) {
+    border-left: .5px solid #9a3737;
+    border-right: .5px solid #9a3737;
+}
+
+/* even (нечетные) junks */
+.junk:nth-child(even) {
+    background-color: #efe2e2;
+}
+
+/* odd (четные) junks */
+.junk:nth-child(odd) {
+    background-color: #fff;
+}

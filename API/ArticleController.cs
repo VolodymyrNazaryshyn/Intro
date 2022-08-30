@@ -45,7 +45,7 @@ namespace Intro.API
                 return _context.Articles
                     .Where(
                         a => _authService.User.Id == a.AuthorId && a.DeleteMoment != null
-                    ).Include(a => a.Topic);
+                    ).Include(a => a.Topic).OrderBy(a => a.DeleteMoment);
             }
 
             return new string[0];

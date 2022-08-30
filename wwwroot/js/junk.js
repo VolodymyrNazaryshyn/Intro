@@ -3,24 +3,27 @@
     if (!junk) throw "Container <junk> not found";
     junk.innerHTML = "Тут будут удаленные сообщения";
 
+    var tplPromise = fetch("/templates/junk.html");
+
     fetch("/api/article?del=true")
         .then(r => r.json())
-        .then(j => {
-            // console.log(j);
-            let html = "";
-            const tpl = "<p>{{moment}} {{topic}} {{text}} <ins>&#x21ED;</ins></p>";
+        .then(async j => {
+            const headerTable = "<tr><th>Deleted moment</th><th>Topic</th><th>Text</th><th>Restore</th></tr>";
+            const tpl = await tplPromise.then(r => r.text());
+            let table = "";
             for (let article of j) {
-                html += tpl.replaceAll("{{moment}}", article.deleteMoment)
+                table += tpl
+                    .replaceAll("{{moment}}", formatDateIfDateToday(new Date(article.deleteMoment)))
                     .replaceAll("{{topic}}", article.topic.title)
-                    .replaceAll("{{text}}", article.text.substring(0, 15));
+                    .replaceAll("{{text}}", `${article.text.substring(0, 15)}${(article.text.length > 15 ? "..." : "")}`);
             }
-            junk.innerHTML = html;
+            junk.innerHTML = `<table class='junkTable'>${headerTable}${table}</table>`;
             onArticleLoaded();
         });
 });
 
 function onArticleLoaded() {
-    for (let ins of document.querySelectorAll("p ins")) {
+    for (let ins of document.querySelectorAll(".junkTable tr td:last-child")) {
         ins.onclick = insClick;
     }
 }

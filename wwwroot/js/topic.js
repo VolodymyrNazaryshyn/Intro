@@ -62,8 +62,6 @@ function loadArticles() {
             const tpl = await tplPromise.then(r => r.text());
             var html = "";
             for (let article of j) {
-                const moment = new Date(article.createdMoment);
-                const replyMoment = new Date(article.reply?.createdMoment);
                 html += tpl
                     .replaceAll("{{id}}", article.id)
                     .replaceAll("{{reply-display}}",
@@ -76,9 +74,9 @@ function loadArticles() {
                         (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
                     .replaceAll("{{avatar}}",
                         (article.author.avatar == null ? "no-avatar.png" : article.author.avatar))
-                    .replaceAll("{{date}}", moment.toLocaleString("uk-UA"))
+                    .replaceAll("{{date}}", formatDateIfDateToday(new Date(article.createdMoment)))
                     .replaceAll("{{tooltip}}",
-                        (article.replyId == null ? "" : `Article: ${article.reply.text}\r\nAuthor: ${article.reply.author.realName}.\r\nCreated moment: ${replyMoment.toLocaleString("uk-UA")}`))
+                        (article.replyId == null ? "" : `Article: ${article.reply.text}\r\nAuthor: ${article.reply.author.realName}.\r\nCreated moment: ${formatDateIfDateToday(new Date(article.reply.createdMoment))}`))
                     .replaceAll("{{reply}}",
                         (article.replyId == null ? "" : `Reply to "${article.reply.text.substring(0, 15)}${article.reply.text.length > 15 ? "..." : ""}" by <b>${article.reply.author.realName}</b>`))
                     .replaceAll("{{articlePicture}}",
