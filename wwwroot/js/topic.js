@@ -154,5 +154,15 @@ function onArticlesLoaded(j) {
 
 function deleteClick(e) {
     const id = e.target.closest(".article").getAttribute("data-id");
-    console.log(id); // Получаем и выводим на консоль id публикации (на удаление)
+    if (confirm(`Delete article ${id}?`)) {
+        //console.log(id); // Получаем и выводим на консоль id публикации (на удаление)
+        fetch(`/api/article/${id}`, {
+            method: "DELETE",
+        }).then(r => r.json())
+            .then(j => {
+                if (j.status == "Ok") {
+                    e.target.closest(".article").style.display = 'none';
+                }
+            });
+    }
 }

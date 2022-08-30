@@ -1,4 +1,5 @@
 ﻿using System;
+// using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Intro.DAL.Entities
@@ -19,6 +20,7 @@ namespace Intro.DAL.Entities
 
         public Guid? ReplyId { get; set; }
         public Entities.Article Reply { get; set; }
+        // public List<Article> Replies { get; set; }
 
         public DateTime CreatedMoment { get; set; }
         public string PictureFile { get; set; }
