@@ -208,5 +208,84 @@ namespace Intro.API
 
             return new { status = "Ok", message = "Deleted" };
         }
+
+        // Public метод без атрибутов - как метод по умолчанию,
+        // сюда попадут запросы, которые не подошли под остальные методы
+        // Такой метод должен быть только один (иначе исключение -
+        // неоднозначность выбора метода), название произвольное (не
+        // обязательно Default)
+        public object Default([FromQuery]string uid)
+        {
+            // Метод запроса можно узнать в HttpContext.Request.Method
+            // сюда попадают все методы, в т.ч. нестандартные
+            switch(HttpContext.Request.Method)
+            {
+                case "PURGE": return Purge(uid);
+                case "UNLINK": return Unlink(uid);
+            }
+            return new { uid, HttpContext.Request.Method };
+        }
+
+        // Приватные методы не сканнируются контекстом, но могут быть
+        // вызваны из метода по умолчанию
+        private object Purge(string uid)
+        {
+            String userId = HttpContext.Request.Headers["User-Id"].ToString();
+            // Валидность uid, userId
+            var error = "Error";
+            var message = "";
+            Guid articleId, authorId;
+            try
+            {
+                articleId = Guid.Parse(uid);
+                authorId = Guid.Parse(userId);
+            }
+            catch
+            {
+                message = "Invalid id structure";
+                return new { error, message };
+            }
+
+            // наличие в БД этих id
+            var author = _context.Users.Find(authorId);
+            if(author == null)
+            {
+                message = "Author not found";
+                return new { error, message };
+            }
+
+            var article = _context.Articles.Find(articleId);
+            if(article == null)
+            {
+                message = "Article not found";
+                return new { error, message };
+            }
+
+            // статья действительно удаленная
+            if(article.DeleteMoment == null)
+            {
+                message = "Article not deleted";
+                return new { error, message };
+            }
+
+            // соответствие автора статьи и юзера
+            if(article.AuthorId != authorId)
+            {
+                message = "Author rejected";
+                return new { error, message };
+            }
+
+            // Восстанавливаем статью
+            article.DeleteMoment = null;
+            _context.SaveChanges();
+
+            message = "Ok";
+            return new { message };
+        }
+
+        private object Unlink(string uid)
+        {
+            return new { uid, Method = "Unlink" };
+        }
     }
 }
