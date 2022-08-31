@@ -28,27 +28,31 @@
 });
 
 function onArticleLoaded() {
-    for (let ins of document.querySelectorAll(".junkTable tr td:last-child")) {
-        ins.onclick = insClick;
+    for (let junk of document.querySelectorAll(".junkTable tr td:last-child")) {
+        junk.onclick = restoreClick;
     }
 }
 
-function insClick(e) {
-    const uid = e.target.closest('.junkTable tr').getAttribute('data-id');
+function restoreClick(e) {
+    const junkTableTr = e.target.closest('.junkTable tr');
+    const uid = junkTableTr.getAttribute('data-id');
     const junk = document.querySelector("junk");
-    fetch("/api/article?uid=" + uid, {
-        method: "PURGE",
-        headers: {
-            "User-Id": junk.getAttribute('data-user-id')
-        }
-    }).then(r => r.json())
-        .then(j => {
-            // console.log(j);
-            if (j.message == "Ok") { // успешно восстановлена
-                // а) обновить страницу либо б) удалить (скрыть) блок с публикацией
+
+    if (confirm(`Restore article ${uid}?`)) {
+        fetch("/api/article?uid=" + uid, {
+            method: "PURGE",
+            headers: {
+                "User-Id": junk.getAttribute('data-user-id')
             }
-            else { // ошибка восстановления (на бэке)
-                alert(j.message);
-            }
-        });
+        }).then(r => r.json())
+            .then(j => {
+                if (j.message == "Ok") { // успешно восстановлена
+                    // удаляем блок с публикацией из таблицы удаленных
+                    junkTableTr.parentNode.removeChild(junkTableTr);
+                }
+                else { // ошибка восстановления (на бэке)
+                    alert(j.message);
+                }
+            });
+    }
 }
