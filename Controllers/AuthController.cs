@@ -268,9 +268,9 @@ namespace Intro.Controllers
                     _introContext.Users.Add(user); // добавляем в БД (контекст)
                     _introContext.SaveChanges(); // сохраняем изменения
 
-                    saveData[0] = null;
-                    saveData[1] = null;
-                    saveData[2] = null;
+                    saveData[0] = null; // RealName
+                    saveData[1] = null; // Login
+                    saveData[2] = null; // Email
                 }
             }
 

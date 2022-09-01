@@ -66,9 +66,9 @@ function loadArticles() {
                     .replaceAll("{{id}}", article.id)
                     .replaceAll("{{reply-display}}",
                         (isAuthUser == "false" ? "none" : "inline-block"))
-                    .replaceAll("{{del-display}}",
+                    .replaceAll("{{del-display}}", /* кнопка удаления (стиль display) */
                         (article.authorId == authorId ? "inline-block" : "none"))
-                    .replaceAll("{{edit-display}}",
+                    .replaceAll("{{edit-display}}", /* кнопка редактирования (стиль display) */
                         (isDisplayEdit(j, article.authorId, article.replyId, article.id) ? "inline-block" : "none"))
                     .replaceAll("{{author}}",
                         (article.author.id == article.topic.authorId ? `${article.author.realName} TC` : article.author.realName))
@@ -148,6 +148,11 @@ function onArticlesLoaded(j) {
         addArticleSpan.innerText = "Add article:";
         refuseReplyArticle.style.display = "none";
     });
+
+    // edit-article button: element ins
+    for (let ins of document.querySelectorAll(".article ins")) {
+        ins.onclick = insClick;
+    }
 }
 
 function deleteClick(e) {
@@ -162,5 +167,45 @@ function deleteClick(e) {
                     e.target.closest(".article").style.display = 'none';
                 }
             });
+    }
+}
+
+function insClick(e) {
+    const article = e.target.closest(".article");
+    const p = article.querySelector("p");
+
+    if (p.getAttribute("contenteditable")) { // уже редактируется
+        p.removeAttribute("contenteditable");
+        // проверить, были ли изменения контента
+        if (p.innerText != p.savedContent) {
+            // если были, то запросить "Сохранить изменения?"
+            if (confirm("Сохранить изменения?")) {
+                // если Да, то отправить на бэкенд
+                const id = article.getAttribute("data-id");
+
+                fetch(`/api/article/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(p.innerText)
+                }).then(r => r.json())
+                    .then(j => {
+                        console.log(j);
+                        if (j.status == "Ok") {
+                            alert("Изменения внесены");
+                        }
+                        else {
+                            alert(j.message);
+                            p.innerText = p.savedContent;
+                        }
+                    });
+            }
+        }
+    }
+    else { // начало редактирования
+        p.setAttribute("contenteditable", "true");
+        p.savedContent = p.innerText;
+        p.focus();
     }
 }

@@ -204,8 +204,8 @@ body {
     margin: -5px 10px 0 0;
 }
 
-/* "кнопка" удалить статью или комментарий (delete) */
-.article del {
+.article del, /* значок (символ) удаления статьи */
+.article ins { /* значок (символ) редактирования статьи */
     cursor: pointer;
     float: right;
     margin-right: .5em;
@@ -213,14 +213,9 @@ body {
     text-decoration: none;
 }
 
-/* "кнопка" редактировать статью или комментарий (edit) */
 .article ins {
-    cursor: pointer;
-    float: right;
-    margin-right: .5em;
-    margin-top: 3px;
-    text-decoration: none;
-} 
+    transform: rotateZ(90deg);
+}
 
 .article span:hover {
     color: darkred;
